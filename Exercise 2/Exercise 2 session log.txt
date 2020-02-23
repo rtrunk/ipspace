@@ -1,0 +1,246 @@
+rtrunk@Rons-Air Terraform (master)* $ terraform apply
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # module.network.azurerm_network_interface.tf_nic will be created
+  + resource "azurerm_network_interface" "tf_nic" {
+      + applied_dns_servers           = (known after apply)
+      + dns_servers                   = (known after apply)
+      + enable_accelerated_networking = false
+      + enable_ip_forwarding          = false
+      + id                            = (known after apply)
+      + internal_dns_name_label       = (known after apply)
+      + internal_fqdn                 = (known after apply)
+      + location                      = "eastus"
+      + mac_address                   = (known after apply)
+      + name                          = "VM_NIC"
+      + network_security_group_id     = (known after apply)
+      + private_ip_address            = (known after apply)
+      + private_ip_addresses          = (known after apply)
+      + resource_group_name           = "ron_ex2"
+      + tags                          = (known after apply)
+      + virtual_machine_id            = (known after apply)
+
+      + ip_configuration {
+          + application_gateway_backend_address_pools_ids = (known after apply)
+          + application_security_group_ids                = (known after apply)
+          + load_balancer_backend_address_pools_ids       = (known after apply)
+          + load_balancer_inbound_nat_rules_ids           = (known after apply)
+          + name                                          = "VM_NIC_Config"
+          + primary                                       = (known after apply)
+          + private_ip_address                            = (known after apply)
+          + private_ip_address_allocation                 = "dynamic"
+          + private_ip_address_version                    = "IPv4"
+          + public_ip_address_id                          = (known after apply)
+          + subnet_id                                     = (known after apply)
+        }
+    }
+
+  # module.network.azurerm_network_security_group.tf_sg will be created
+  + resource "azurerm_network_security_group" "tf_sg" {
+      + id                  = (known after apply)
+      + location            = "eastus"
+      + name                = "Public_SG"
+      + resource_group_name = "ron_ex2"
+      + security_rule       = [
+          + {
+              + access                                     = "Allow"
+              + description                                = ""
+              + destination_address_prefix                 = "*"
+              + destination_address_prefixes               = []
+              + destination_application_security_group_ids = []
+              + destination_port_range                     = "22"
+              + destination_port_ranges                    = []
+              + direction                                  = "Inbound"
+              + name                                       = "Inbound_SSH"
+              + priority                                   = 101
+              + protocol                                   = "Tcp"
+              + source_address_prefix                      = "*"
+              + source_address_prefixes                    = []
+              + source_application_security_group_ids      = []
+              + source_port_range                          = "*"
+              + source_port_ranges                         = []
+            },
+          + {
+              + access                                     = "Allow"
+              + description                                = ""
+              + destination_address_prefix                 = "*"
+              + destination_address_prefixes               = []
+              + destination_application_security_group_ids = []
+              + destination_port_range                     = "443"
+              + destination_port_ranges                    = []
+              + direction                                  = "Inbound"
+              + name                                       = "Inbound_HTTPS"
+              + priority                                   = 103
+              + protocol                                   = "Tcp"
+              + source_address_prefix                      = "*"
+              + source_address_prefixes                    = []
+              + source_application_security_group_ids      = []
+              + source_port_range                          = "*"
+              + source_port_ranges                         = []
+            },
+          + {
+              + access                                     = "Allow"
+              + description                                = ""
+              + destination_address_prefix                 = "*"
+              + destination_address_prefixes               = []
+              + destination_application_security_group_ids = []
+              + destination_port_range                     = "80"
+              + destination_port_ranges                    = []
+              + direction                                  = "Inbound"
+              + name                                       = "Inbound_HTTP"
+              + priority                                   = 102
+              + protocol                                   = "Tcp"
+              + source_address_prefix                      = "*"
+              + source_address_prefixes                    = []
+              + source_application_security_group_ids      = []
+              + source_port_range                          = "*"
+              + source_port_ranges                         = []
+            },
+        ]
+      + tags                = (known after apply)
+    }
+
+  # module.network.azurerm_public_ip.tf_public_ip will be created
+  + resource "azurerm_public_ip" "tf_public_ip" {
+      + allocation_method            = "Static"
+      + fqdn                         = (known after apply)
+      + id                           = (known after apply)
+      + idle_timeout_in_minutes      = 4
+      + ip_address                   = (known after apply)
+      + ip_version                   = "IPv4"
+      + location                     = "eastus"
+      + name                         = "VM_Public_IP"
+      + public_ip_address_allocation = (known after apply)
+      + resource_group_name          = "ron_ex2"
+      + sku                          = "Basic"
+      + tags                         = (known after apply)
+    }
+
+  # module.network.azurerm_resource_group.tf_rg will be created
+  + resource "azurerm_resource_group" "tf_rg" {
+      + id       = (known after apply)
+      + location = "eastus"
+      + name     = "ron_ex2"
+      + tags     = (known after apply)
+    }
+
+  # module.network.azurerm_route_table.tf_RT will be created
+  + resource "azurerm_route_table" "tf_RT" {
+      + disable_bgp_route_propagation = false
+      + id                            = (known after apply)
+      + location                      = "eastus"
+      + name                          = "Private_RT"
+      + resource_group_name           = "ron_ex2"
+      + route                         = [
+          + {
+              + address_prefix         = "0.0.0.0/0"
+              + name                   = "drop_Int_access"
+              + next_hop_in_ip_address = null
+              + next_hop_type          = "None"
+            },
+        ]
+      + subnets                       = (known after apply)
+      + tags                          = (known after apply)
+    }
+
+  # module.network.azurerm_subnet.tf_private_subnet will be created
+  + resource "azurerm_subnet" "tf_private_subnet" {
+      + address_prefix                                 = "172.31.2.0/24"
+      + enforce_private_link_endpoint_network_policies = false
+      + enforce_private_link_service_network_policies  = false
+      + id                                             = (known after apply)
+      + ip_configurations                              = (known after apply)
+      + name                                           = "Private"
+      + resource_group_name                            = "ron_ex2"
+      + route_table_id                                 = (known after apply)
+      + virtual_network_name                           = "RonNet"
+    }
+
+  # module.network.azurerm_subnet.tf_public_subnet will be created
+  + resource "azurerm_subnet" "tf_public_subnet" {
+      + address_prefix                                 = "172.31.1.0/24"
+      + enforce_private_link_endpoint_network_policies = false
+      + enforce_private_link_service_network_policies  = false
+      + id                                             = (known after apply)
+      + ip_configurations                              = (known after apply)
+      + name                                           = "Public"
+      + resource_group_name                            = "ron_ex2"
+      + virtual_network_name                           = "RonNet"
+    }
+
+  # module.network.azurerm_subnet_route_table_association.tf_RT_associaton will be created
+  + resource "azurerm_subnet_route_table_association" "tf_RT_associaton" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.azurerm_virtual_network.tf_vnet will be created
+  + resource "azurerm_virtual_network" "tf_vnet" {
+      + address_space       = [
+          + "172.31.0.0/16",
+        ]
+      + id                  = (known after apply)
+      + location            = "eastus"
+      + name                = "RonNet"
+      + resource_group_name = "ron_ex2"
+      + tags                = (known after apply)
+
+      + subnet {
+          + address_prefix = (known after apply)
+          + id             = (known after apply)
+          + name           = (known after apply)
+          + security_group = (known after apply)
+        }
+    }
+
+Plan: 9 to add, 0 to change, 0 to destroy.
+
+
+Warning: "route_table_id": [DEPRECATED] Use the `azurerm_subnet_route_table_association` resource instead.
+
+  on modules/network/network.tf line 34, in resource "azurerm_subnet" "tf_private_subnet":
+  34: resource "azurerm_subnet" "tf_private_subnet" {
+
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+module.network.azurerm_resource_group.tf_rg: Creating...
+module.network.azurerm_resource_group.tf_rg: Creation complete after 0s [id=/subscriptions/c485bb24-9cf2-4432-a70f-51759e2679e0/resourceGroups/ron_ex2]
+module.network.azurerm_route_table.tf_RT: Creating...
+module.network.azurerm_public_ip.tf_public_ip: Creating...
+module.network.azurerm_virtual_network.tf_vnet: Creating...
+module.network.azurerm_network_security_group.tf_sg: Creating...
+module.network.azurerm_route_table.tf_RT: Creation complete after 1s [id=/subscriptions/c485bb24-9cf2-4432-a70f-51759e2679e0/resourceGroups/ron_ex2/providers/Microsoft.Network/routeTables/Private_RT]
+module.network.azurerm_network_security_group.tf_sg: Creation complete after 1s [id=/subscriptions/c485bb24-9cf2-4432-a70f-51759e2679e0/resourceGroups/ron_ex2/providers/Microsoft.Network/networkSecurityGroups/Public_SG]
+module.network.azurerm_public_ip.tf_public_ip: Creation complete after 5s [id=/subscriptions/c485bb24-9cf2-4432-a70f-51759e2679e0/resourceGroups/ron_ex2/providers/Microsoft.Network/publicIPAddresses/VM_Public_IP]
+module.network.azurerm_virtual_network.tf_vnet: Still creating... [10s elapsed]
+module.network.azurerm_virtual_network.tf_vnet: Creation complete after 11s [id=/subscriptions/c485bb24-9cf2-4432-a70f-51759e2679e0/resourceGroups/ron_ex2/providers/Microsoft.Network/virtualNetworks/RonNet]
+module.network.azurerm_subnet.tf_public_subnet: Creating...
+module.network.azurerm_subnet.tf_private_subnet: Creating...
+module.network.azurerm_subnet.tf_private_subnet: Still creating... [10s elapsed]
+module.network.azurerm_subnet.tf_public_subnet: Still creating... [10s elapsed]
+module.network.azurerm_subnet.tf_private_subnet: Creation complete after 10s [id=/subscriptions/c485bb24-9cf2-4432-a70f-51759e2679e0/resourceGroups/ron_ex2/providers/Microsoft.Network/virtualNetworks/RonNet/subnets/Private]
+module.network.azurerm_subnet_route_table_association.tf_RT_associaton: Creating...
+module.network.azurerm_subnet.tf_public_subnet: Still creating... [20s elapsed]
+module.network.azurerm_subnet_route_table_association.tf_RT_associaton: Still creating... [10s elapsed]
+module.network.azurerm_subnet.tf_public_subnet: Creation complete after 20s [id=/subscriptions/c485bb24-9cf2-4432-a70f-51759e2679e0/resourceGroups/ron_ex2/providers/Microsoft.Network/virtualNetworks/RonNet/subnets/Public]
+module.network.azurerm_network_interface.tf_nic: Creating...
+module.network.azurerm_subnet_route_table_association.tf_RT_associaton: Creation complete after 11s [id=/subscriptions/c485bb24-9cf2-4432-a70f-51759e2679e0/resourceGroups/ron_ex2/providers/Microsoft.Network/virtualNetworks/RonNet/subnets/Private]
+module.network.azurerm_network_interface.tf_nic: Creation complete after 0s [id=/subscriptions/c485bb24-9cf2-4432-a70f-51759e2679e0/resourceGroups/ron_ex2/providers/Microsoft.Network/networkInterfaces/VM_NIC]
+
+Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+public_ip = 104.45.138.92
+rtrunk@Rons-Air Terraform (master)* $ 
